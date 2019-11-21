@@ -2,7 +2,8 @@ from meta_info import DecorationHelper
 
 
 def _on_complete(cls, store):
-    pass
+    for key, prop_info in store.members.items():
+        prop_info.on_complete(cls, key)
 
 
 _HELPER = DecorationHelper("____json_serialization", _on_complete)
