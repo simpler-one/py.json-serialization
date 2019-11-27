@@ -8,7 +8,7 @@ class TypeProvider(ABC):
 
 
 class SimpleType(TypeProvider):
-    def __init__(self, current_type):
+    def __init__(self, obj_type):
         self._obj_type = obj_type
 
     def get_type(self, current_type, json_obj):
@@ -22,7 +22,11 @@ class SelfType(TypeProvider):
 
 class ConditionalType(TypeProvider):
     @classmethod
-    def by_type():
+    def by_type(cls, mapping):
+        """
+        
+        :param typing.Dict[type, type] mapping:
+        """
         pass
 
     def __init__(self, type_selector):
@@ -34,7 +38,7 @@ class ConditionalType(TypeProvider):
 
 
 class ContainerType(TypeProvider, ABC):
-    def __init__(self, tyep_like):
+    def __init__(self, type_like):
         self._inner_provider = to_provider(type_like)
 
     def get_type(self, current_type, json_obj):
@@ -58,4 +62,4 @@ def to_provider(type_like):
     if isinstance(type_like, TypeProvider):
         return type_like
     
-    raise TypeException("parameter must be type or callable or TypeProvider but got: {type(type_like)}")
+    raise TypeError("parameter must be type or callable or TypeProvider but got: {type(type_like)}")

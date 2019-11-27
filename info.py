@@ -1,4 +1,8 @@
-from meta_info import 
+from meta_info import DecorationHelper, OnDecorate
+from property_selector import PropertySelector, to_selector
+import inspect
+
+_HELPER = DecorationHelper("____json_serialization")
 
 
 class ClassInfo:
@@ -6,18 +10,19 @@ class ClassInfo:
         self.creator = creator
 
 
-class PropInfo():
+class PropInfo(OnDecorate):
     @classmethod
-    def _get_getter(cls, json_key):
-        if json_key == property_selector.ALL:
-            return lambda obj: obj
-        else:
-            return lambda obj: obj.get(json_key)
-
     def _normalize_converter(cls, converter):
-        # TODO: check cls, self
-        if len(inspect.get(converter)) == 2:
-            return 
+        """
+
+        :param ((list or dict) -> Any) or ((list or dict, Any) -> Any) converter:
+        """
+        arg_len = len(inspect.getfullargspec(converter))
+        if hasattr(converter, "__self__"):
+            arg_len = arg_len - 1
+
+        if arg_len == 1:
+            return lambda obj, _: converter(obj)
         else:
             return converter
 
@@ -29,12 +34,13 @@ class PropInfo():
         self.converter = converter
         self.setter_name = ""
         self._setter_pattern = setter
-        self.getter = self._get_getter(json_key)
+        self.getter: PropertySelector = None
 
-    def on_decorate(cls, prop):
+    def on_decorate(self, prop):
         self.prop_name = prop
         if self.json_key is None:
             self.json_key = prop
 
         set.getter = self._get_getter(self.json_key)
         self.setter_name = self._setter_pattern.replace("$", prop)
+        self.getter = to_selector(prop.json_key)

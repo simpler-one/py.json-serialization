@@ -1,5 +1,6 @@
 from typing import TypeVar
-from info import ClassInfo, PropInfo
+import json
+from info import ClassInfo, PropInfo, HELPER
 
 T = TypeVar("T")
 
@@ -13,4 +14,4 @@ def from_json_obj(obj, cls, option):
 def _from_json_obj(obj, cls, option, path):
     store = HELPER.get_store(cls)
     if store is None:
-        raise ValueError("")
+        raise ValueError("cls must be decorated by json_class")
