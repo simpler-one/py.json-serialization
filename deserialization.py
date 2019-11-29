@@ -11,7 +11,7 @@ def parse(text, cls, option):
 def from_json_obj(json_obj, cls, option):
     return _from_json_obj(json_obj, cls, option, cls.__name__)
 
-def _from_json_obj(src, cls, option, path):
+def _from_json_obj(source, cls, option, path):
     store = HELPER.get_store(cls)
     if store is None:
         raise ValueError("cls must be decorated by json_class")
@@ -24,18 +24,25 @@ def _from_json_obj(src, cls, option, path):
     for key, member in store.members.items():
         json_key = member.json_key
         cur_path = "{path}.{json_key}"
-        item = member.getter(src)
-        if item is None:
+        src = member.getter(source)
+        if src is None:
             if member.mamdarory:
                 raise VallueError(f"Property is mandatory but null or not found: {path}")
             else:
                 continue
 
-        if member.recursive is not None and  type(item) in CONTAINER_TYPES:
-            item = _expand(item, member, cur_path)
+        value = src
+        if member.recursive is not None and type(src) in CONTAINER_TYPES:
+            value = _expand(item, member, cur_path)
 
-        setattr(dst, member.setter_name, item)
+        setattr(dst, member.setter_name, value)
 
 
-def _expand(src, recursive, path):
-    pass
+def _expand(source, cls, member, path):
+    if isinstance(member, ListType):
+        pass
+    elif isinstance(member, MapType):
+        pass
+    else:
+        pass
+
