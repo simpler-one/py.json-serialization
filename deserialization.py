@@ -23,9 +23,19 @@ def _from_json_obj(src, cls, option, path):
 
     for key, member in store.members.items():
         json_key = member.json_key
+        cur_path = "{path}.{json_key}"
         item = member.getter(src)
         if item is None:
             if member.mamdarory:
                 raise VallueError(f"Property is mandatory but null or not found: {path}")
             else:
                 continue
+
+        if member.recursive is not None and  type(item) in CONTAINER_TYPES:
+            item = _expand(item, member, cur_path)
+
+        setattr(dst, member.setter_name, item)
+
+
+def _expand(src, recursive, path):
+    pass
