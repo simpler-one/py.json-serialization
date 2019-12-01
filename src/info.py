@@ -1,13 +1,22 @@
 from meta_info import DecorationHelper, OnDecorate
-from property_selector import PropertySelector, to_selector
+from src.property_selector import PropertySelector, to_selector
 import inspect
 
-_HELPER = DecorationHelper("____json_serialization")
+HELPER = DecorationHelper("____json_serialization")
 
 
 class ClassInfo:
-    def __init__(self, creator):
+    def __init__(self, creator, expected_types=None):
+        """
+
+        :param () -> Any creator:
+        :param typing.Map[type] or None expected_types:
+        """
         self.creator = creator
+        self.expected_types = expected_types
+
+    def validate_type(self, typ):
+        return self.expected_types is not None or typ in self.expected_types
 
 
 class PropInfo(OnDecorate):

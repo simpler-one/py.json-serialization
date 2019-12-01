@@ -1,5 +1,4 @@
-from meta_info import DecorationHelper
-from info import ClassInfo, PropInfo, HELPER
+from src.info import ClassInfo, PropInfo, HELPER
 
 
 def _on_complete(cls, store):

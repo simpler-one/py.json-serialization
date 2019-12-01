@@ -11,7 +11,7 @@ class PropertySelector(ABC):
         raise NotImplementedError()
 
 
-class IndexPropertySelector:
+class IndexPropertySelector(PropertySelector):
     def __init__(self, key):
         self._key = key
 
@@ -19,7 +19,7 @@ class IndexPropertySelector:
         return json_obj[self._key] if self._key < len(json_obj) else None
 
 
-class NamePropertySelector:
+class NamePropertySelector(PropertySelector):
     def __init__(self, key):
         self._key = key
 
@@ -27,7 +27,7 @@ class NamePropertySelector:
         return json_obj.get(self._key)
 
 
-class AllPropertySelector:
+class AllPropertySelector(PropertySelector):
     def get_from(self, json_obj):
         return json_obj
 
@@ -39,6 +39,7 @@ def to_selector(selector_like, prop_name):
     """
 
     :param str or int or PropertySelector selector_like:
+    :param str prop_name:
     """
     if selector_like is None:
         return NamePropertySelector(prop_name)

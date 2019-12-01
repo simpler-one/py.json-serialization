@@ -1,4 +1,4 @@
-from abc import abc, abstractmethod
+from abc import ABC, abstractmethod
 
 
 class TypeProvider(ABC):
@@ -42,7 +42,7 @@ class ContainerType(TypeProvider, ABC):
         self._inner_provider = to_provider(type_like)
 
     def get_type(self, current_type, json_obj):
-        type_like = self._type_selector(current_type, json_obj)
+        type_like = self._inner_provider.get_type(current_type, json_obj)
         return to_provider(type_like).get_type(current_type, json_obj)
 
 
@@ -50,7 +50,7 @@ class ListType(ContainerType):
     pass
 
 
-class ListType(ContainerType):
+class MapType(ContainerType):
     pass
 
 
