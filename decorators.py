@@ -15,5 +15,5 @@ def json_class(creator=default_creator):
     return HELPER.class_info(ClassInfo(creator))
 
 
-def json_property(json_prop_name=None, mandatory=True, recursive=None, converter=no_convert, setter="$"):
+def json_property(json_prop_name=None, mandatory=True, recursive=None, *, converter=no_convert, setter="$"):
     return HELPER.member_info(PropInfo(json_prop_name, mandatory, recursive, converter, setter))
