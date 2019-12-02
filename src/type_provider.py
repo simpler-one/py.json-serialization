@@ -55,7 +55,9 @@ class MapType(ContainerType):
 
 
 def to_provider(type_like):
-    if type_like is None or isinstance(type_like, type):
+    if type_like is None:
+        return None
+    if isinstance(type_like, type):
         return SimpleType(type_like)
     if callable(type_like):
         return ConditionalType(type_like)
