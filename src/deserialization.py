@@ -9,14 +9,21 @@ CONTAINER_TYPES = {list, dict}
 
 
 def parse(text, cls, option):
+    if not _validate_root_class(cls):
+        raise ValueError()
     return _from_json_obj(json.loads(text), cls, option, cls.__name__)
 
 
 def from_json_obj(json_obj, cls, option):
+    if not _validate_root_class(cls):
+        raise ValueError()
     return _from_json_obj(json_obj, cls, option, cls.__name__)
 
 
 def _from_json_obj(source, cls, option, path):
+    if cls is None:
+        return source
+
     store = HELPER.get_store(cls)
     if store is None:
         raise ValueError("cls must be decorated by json_class")
@@ -46,15 +53,16 @@ def _from_json_obj(source, cls, option, path):
 def _expand(source, cls, member, opt, path):
     get_type = member.type_provider.get_type
     if isinstance(member, ListType):
-        return [_from_json_obj(src, get_type(cls, src), opt, f"{path}[{i}]") for i, src in enumerate(source)]
+        return [
+            _from_json_obj(src, get_type(cls, src), opt, f"{path}[{i}]")
+            for i, src in enumerate(source)
+            if get_type(cls, src) is not NoneType
+        ]
     elif isinstance(member, MapType):
         return {k: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
     else:
         return _from_json_obj_as(source, get_type(cls, source), opt, path)
 
 
-def _from_json_obj_as(source, cls, member, opt, path):
-    if cls is None:
-        return source
-    else:
-        return _from_json_obj(source, cls, member, opt, path)
+def _validate_root_class(cls):
+    return cls is not None
