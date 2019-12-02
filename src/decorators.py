@@ -15,4 +15,5 @@ def json_class(creator=default_creator):
 
 
 def json_property(json_prop_name=None, mandatory=True, recursive=None, *, converter=no_convert, setter="$"):
-    return HELPER.member_info(PropInfo(json_prop_name, mandatory, recursive, converter, setter))
+    type_provider = to_provider(recursive)
+    return HELPER.member_info(PropInfo(json_prop_name, mandatory, type_provider, converter, setter))
