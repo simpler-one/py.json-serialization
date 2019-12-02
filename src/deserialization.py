@@ -50,12 +50,11 @@ def _expand(source, cls, member, opt, path):
     elif isinstance(member, MapType):
         return {k: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
     else:
-        typ = get_type()
-        return _from_json_obj(source, get_type(cls, source), opt, path)
+        return _from_json_obj_as(source, get_type(cls, source), opt, path)
 
 
 def _from_json_obj_as(source, cls, member, opt, path):
     if cls is None:
         return source
-    if cls is NoneType:
-        
+    else:
+        return _from_json_obj(source, cls, member, opt, path)
