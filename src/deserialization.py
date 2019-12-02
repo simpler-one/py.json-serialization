@@ -35,9 +35,8 @@ def _from_json_obj(source, cls, option, path):
     dst = store.cls.creator()
 
     for key, member in store.members.items():
-        json_key = member.json_key
-        cur_path = f"{path}.{json_key}"
-        src = member.getter(source)
+        cur_path = path + member.prop_selector.json_path
+        src = member.prop_selector.get(source)
         if src is None:
             if member.mamdarory:
                 raise ValueError(f"Property is mandatory but null or not found: {path}")
@@ -60,7 +59,11 @@ def _expand(source, cls, member, opt, path):
             if get_type(cls, src) is not NoneType
         ]
     elif isinstance(member, MapType):
-        return {k: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
+        return {
+            key: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{key}")
+            for key, src in source.items()
+            if get_type(cls, src) is not NoneType
+        }
     else:
         return _from_json_obj(source, get_type(cls, source), opt, path)
 
