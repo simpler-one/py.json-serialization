@@ -4,6 +4,7 @@ from src.info import HELPER
 from type_provider import ListType, MapType
 
 T = TypeVar("T")
+NoneType = type(None)
 
 CONTAINER_TYPES = {list, dict}
 
@@ -61,7 +62,7 @@ def _expand(source, cls, member, opt, path):
     elif isinstance(member, MapType):
         return {k: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
     else:
-        return _from_json_obj_as(source, get_type(cls, source), opt, path)
+        return _from_json_obj(source, get_type(cls, source), opt, path)
 
 
 def _validate_root_class(cls):
