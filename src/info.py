@@ -35,15 +35,15 @@ class PropInfo(OnDecorate):
         else:
             return converter
 
-    def __init__(self, json_key, mandatory, recursive, converter, setter):
+    def __init__(self, json_key, mandatory, type_provider, converter, setter):
         self.prop_name = ""
         self.json_key = json_key
         self.mandatory = mandatory
-        self.recursive = recursive
+        self.type_provider = type_provider
         self.converter = converter
         self.setter_name = ""
         self._setter_pattern = setter
-        self.getter: PropertySelector = None
+        self.prop_selector: PropertySelector = None
 
     def on_decorate(self, prop):
         self.prop_name = prop
@@ -52,4 +52,4 @@ class PropInfo(OnDecorate):
 
         set.getter = self._get_getter(self.json_key)
         self.setter_name = self._setter_pattern.replace("$", prop)
-        self.getter = to_selector(prop.json_key)
+        self.prop_selector = to_selector(prop.json_key)
