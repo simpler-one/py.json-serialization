@@ -37,17 +37,17 @@ def _from_json_obj(source, cls, option, path):
                 continue
 
         value = src
-        if member.recursive is not None and type(src) in CONTAINER_TYPES:
+        if member.type_provider is not None and type(src) in CONTAINER_TYPES:
             value = _expand(src, cls, member, option, cur_path)
 
         setattr(dst, member.setter_name, value)
 
 
 def _expand(source, cls, member, opt, path):
-    recursive = member.recursive
+    get_type = member.type_provider.get_type
     if isinstance(member, ListType):
-        return [_from_json_obj(src, recursive.get_type(cls, src), opt, f"{path}.{i}") for i, src in enumerate(source)]
+        return [_from_json_obj(src, get_type(cls, src), opt, f"{path}.{i}") for i, src in enumerate(source)]
     elif isinstance(member, MapType):
-        return {k: _from_json_obj(src, recursive.get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
+        return {k: _from_json_obj(src, get_type(cls, src), opt, f"{path}.{k}") for k, src in source.items()}
     else:
-        return _from_json_obj(source, recursive.get_type(cls, source), opt, path)
+        return _from_json_obj(source, get_type(cls, source), opt, path)
