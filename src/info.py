@@ -21,7 +21,7 @@ class ClassInfo(OnDecorate):
 
     def on_decorate(self, cls, cls_name):
         if self.creator is None:
-            self.creator = cls()
+            self.creator = cls
 
 
 class PropInfo(OnDecorate):
