@@ -37,14 +37,17 @@ class PropInfo(OnDecorate):
             return converter
 
     def __init__(self, prop_selector_like, mandatory, type_provider, converter, setter_pattern):
-        self._prop_selector_like = json_key
+        self.prop_selector: PropertySelector = None
         self.mandatory = mandatory
         self.type_provider = type_provider
         self.converter = converter
         self.setter_name = ""
+        self._prop_selector_like = prop_selector_like
         self._setter_pattern = setter_pattern
-        self.prop_selector: PropertySelector = None
 
     def on_decorate(self, prop, prop_name):
-        self.setter_name = self._setter_pattern.replace("$", prmp_name)
-        self.prop_selector = to_selector(prop._prop_selector_like, prop_name)
+        self.setter_name = self._setter_pattern.replace("$", prop_name)
+        if self._prop_selector_like is None:
+            self._prop_selector_like = prop_name
+
+        self.prop_selector = to_selector(self._prop_selector_like)
