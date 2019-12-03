@@ -47,6 +47,7 @@ def _from_json_obj(source, cls, option, path):
         if member.type_provider is not None and type(src) in CONTAINER_TYPES:
             value = _expand(src, cls, member, option, cur_path)
 
+        value = member.converter(value, option)
         setattr(dst, member.setter_name, value)
     return dst
 
