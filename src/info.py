@@ -1,6 +1,6 @@
 from meta_info import DecorationHelper, OnDecorate
 from .property_selector import PropertySelector, to_selector
-from argument_fitting improt ignore_longer
+from argument_fitting import ignore_longer
 
 HELPER = DecorationHelper("____json_serialization")
 """ :type: DecorationHelper[ClassInfo, PropInfo] """
