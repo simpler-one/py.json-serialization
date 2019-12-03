@@ -2,6 +2,13 @@ from abc import ABC, abstractmethod
 
 
 class PropertySelector(ABC):
+    @property
+    def json_path(self):
+        return f".{self.json_key}"
+
+    def __init__(self, json_key):
+        self.json_key = json_key
+
     @abstractmethod
     def get_from(self, json_obj):
         """
