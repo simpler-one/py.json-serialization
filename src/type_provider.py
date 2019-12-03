@@ -27,7 +27,7 @@ class ConditionalType(TypeProvider):
         
         :param typing.Dict[type, type] mapping:
         """
-        return ConditionalType(lamda _, obj: mapping.get(type(obj)))
+        return ConditionalType(lambda _, obj: mapping.get(type(obj)))
 
     def __init__(self, type_selector):
         self._type_selector = type_selector
