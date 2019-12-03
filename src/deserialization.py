@@ -1,7 +1,7 @@
 from typing import TypeVar
 import json
-from src.info import HELPER
-from type_provider import ListType, MapType
+from .info import HELPER
+from .type_provider import ListType, MapType
 
 T = TypeVar("T")
 NoneType = type(None)
