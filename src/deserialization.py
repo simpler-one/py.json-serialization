@@ -35,8 +35,8 @@ def _from_json_obj(source, cls, option, path):
     dst = store.cls.creator()
 
     for key, member in store.members.items():
-        cur_path = path + member.prop_selector.json_path
-        src = member.prop_selector.get(source)
+        cur_path = path + member.prop_selector.path
+        src = member.prop_selector.get_from(source)
         if src is None:
             if member.mamdarory:
                 raise ValueError(f"Property is mandatory but null or not found: {path}")
