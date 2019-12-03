@@ -3,11 +3,11 @@ from abc import ABC, abstractmethod
 
 class PropertySelector(ABC):
     @property
-    def json_path(self):
-        return f".{self.json_key}"
+    def path(self):
+        return f".{self.key}"
 
-    def __init__(self, json_key):
-        self.json_key = json_key
+    def __init__(self, key):
+        self.key = key
 
     @abstractmethod
     def get_from(self, json_obj):
@@ -19,22 +19,23 @@ class PropertySelector(ABC):
 
 
 class IndexPropertySelector(PropertySelector):
-    def __init__(self, key):
-        self._key = key
-
     def get_from(self, json_obj):
         return json_obj[self._key] if self._key < len(json_obj) else None
 
 
 class NamePropertySelector(PropertySelector):
-    def __init__(self, key):
-        self._key = key
-
     def get_from(self, json_obj):
         return json_obj.get(self._key)
 
 
 class AllPropertySelector(PropertySelector):
+    @property
+    def path(self):
+        return ""
+
+    def __init__(self):
+        super().__init__(None)
+
     def get_from(self, json_obj):
         return json_obj
 
