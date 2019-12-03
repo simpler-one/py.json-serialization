@@ -43,14 +43,13 @@ class AllPropertySelector(PropertySelector):
 ALL = AllPropertySelector()
 
 
-def to_selector(selector_like, prop_name):
+def to_selector(selector_like):
     """
 
     :param str or int or PropertySelector selector_like:
-    :param str prop_name:
     """
     if selector_like is None:
-        return NamePropertySelector(prop_name)
+        return None
     if isinstance(selector_like, int):
         return ListPropertySelector(selector_like)
     if isinstance(selector_like, str):
