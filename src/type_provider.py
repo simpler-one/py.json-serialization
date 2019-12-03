@@ -27,14 +27,14 @@ class ConditionalType(TypeProvider):
         
         :param typing.Dict[type, type] mapping:
         """
-        pass
+        return ConditionalType(lamda _, obj: mapping.get(type(obj)))
 
     def __init__(self, type_selector):
         self._type_selector = type_selector
 
     def get_type(self, current_type, json_obj):
         type_like = self._type_selector(current_type, json_obj)
-        return to_provider(type_like).get_type(current_type, json_obj)
+        return type_like if isinstance(type_like, type) else type_like.get_type(current_type, json_obj)
 
 
 class ContainerType(TypeProvider, ABC):
