@@ -18,14 +18,14 @@ class PropertySelector(ABC):
         raise NotImplementedError()
 
 
-class IndexPropertySelector(PropertySelector):
+class ListPropertySelector(PropertySelector):
     def get_from(self, json_obj):
-        return json_obj[self._key] if self._key < len(json_obj) else None
+        return json_obj[self.key] if self.key < len(json_obj) else None
 
 
-class NamePropertySelector(PropertySelector):
+class MapPropertySelector(PropertySelector):
     def get_from(self, json_obj):
-        return json_obj.get(self._key)
+        return json_obj.get(self.key)
 
 
 class AllPropertySelector(PropertySelector):
@@ -52,9 +52,9 @@ def to_selector(selector_like, prop_name):
     if selector_like is None:
         return NamePropertySelector(prop_name)
     if isinstance(selector_like, int):
-        return IndexPropertySelector(selector_like)
+        return ListPropertySelector(selector_like)
     if isinstance(selector_like, str):
-        return NamePropertySelector(selector_like)
+        return MapPropertySelector(selector_like)
     if isinstance(selector_like, PropertySelector):
         return selector_like
     
