@@ -1,8 +1,9 @@
 from meta_info import DecorationHelper, OnDecorate
-from src.property_selector import PropertySelector, to_selector
+from .property_selector import PropertySelector, to_selector
 import inspect
 
 HELPER = DecorationHelper("____json_serialization")
+""" :type: DecorationHelper[ClassInfo, PropInfo] """
 
 
 class ClassInfo:
@@ -35,21 +36,15 @@ class PropInfo(OnDecorate):
         else:
             return converter
 
-    def __init__(self, json_key, mandatory, type_provider, converter, setter):
-        self.prop_name = ""
-        self.json_key = json_key
+    def __init__(self, prop_selector_like, mandatory, type_provider, converter, setter_pattern):
+        self._prop_selector_like = json_key
         self.mandatory = mandatory
         self.type_provider = type_provider
         self.converter = converter
         self.setter_name = ""
-        self._setter_pattern = setter
+        self._setter_pattern = setter_pattern
         self.prop_selector: PropertySelector = None
 
-    def on_decorate(self, prop):
-        self.prop_name = prop
-        if self.json_key is None:
-            self.json_key = prop
-
-        set.getter = self._get_getter(self.json_key)
-        self.setter_name = self._setter_pattern.replace("$", prop)
-        self.prop_selector = to_selector(prop.json_key)
+    def on_decorate(self, prop, prop_name):
+        self.setter_name = self._setter_pattern.replace("$", prmp_name)
+        self.prop_selector = to_selector(prop._prop_selector_like, prop_name)
