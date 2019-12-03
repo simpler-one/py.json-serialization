@@ -1,12 +1,12 @@
 from meta_info import DecorationHelper, OnDecorate
 from .property_selector import PropertySelector, to_selector
-import inspect
+from argument_fitting improt ignore_longer
 
 HELPER = DecorationHelper("____json_serialization")
 """ :type: DecorationHelper[ClassInfo, PropInfo] """
 
 
-class ClassInfo:
+class ClassInfo(OnDecorate):
     def __init__(self, creator, expected_types=None):
         """
 
@@ -17,30 +17,19 @@ class ClassInfo:
         self.expected_types = expected_types
 
     def validate_type(self, typ):
-        return self.expected_types is not None or typ in self.expected_types
+        return self.expected_types is None or typ in self.expected_types
+
+    def on_decorate(self, cls, cls_name):
+        if self.creator is None:
+            self.creator = cls()
 
 
 class PropInfo(OnDecorate):
-    @classmethod
-    def _normalize_converter(cls, converter):
-        """
-
-        :param ((list or dict) -> Any) or ((list or dict, Any) -> Any) converter:
-        """
-        arg_len = len(inspect.getfullargspec(converter))
-        if hasattr(converter, "__self__"):
-            arg_len = arg_len - 1
-
-        if arg_len == 1:
-            return lambda obj, _: converter(obj)
-        else:
-            return converter
-
     def __init__(self, prop_selector_like, mandatory, type_provider, converter, setter_pattern):
         self.prop_selector: PropertySelector = None
         self.mandatory = mandatory
         self.type_provider = type_provider
-        self.converter = converter
+        self.converter = ignore_longer(converter)
         self.setter_name = ""
         self._prop_selector_like = prop_selector_like
         self._setter_pattern = setter_pattern
