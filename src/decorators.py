@@ -1,4 +1,5 @@
-from src.info import ClassInfo, PropInfo, HELPER
+from info import ClassInfo, PropInfo, HELPER
+from type_provider import to_provider 
 
 
 def _on_complete(cls, store):
@@ -6,12 +7,12 @@ def _on_complete(cls, store):
         prop_info.on_complete(cls, key)
 
 
-def default_creator(cls):
-    return cls()
+def no_convert(obj, *_):
+    return obj
 
 
-def json_class(creator=default_creator):
-    return HELPER.class_info(ClassInfo(creator))
+def json_class(*, creator=None, expected_types=None):
+    return HELPER.class_info(ClassInfo(creator, expected_types))
 
 
 def json_property(json_prop_name=None, mandatory=True, recursive=None, *, converter=no_convert, setter="$"):
