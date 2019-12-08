@@ -22,12 +22,40 @@ class SelfType(TypeProvider):
 
 class ConditionalType(TypeProvider):
     @classmethod
-    def by_type(cls, mapping):
+    def from_conditions(cls, *conditions):
         """
-        
-        :param typing.Dict[type, type] mapping:
+
+        :param typing.List[((Any) -> bool, type or TypeProvider)] conditions:
         """
-        return ConditionalType(lambda _, obj: mapping.get(type(obj)))
+        def find_type(obj):
+            for condition, result_type in conditions:
+                if condition(obj):
+                    return result_type
+            return None
+
+        return ConditionalType(find_type)
+
+    @classmethod
+    def if_type(cls, expected_type, result_type):
+        """
+
+        :param type expected_type:
+        :param type or TypeProvide result_type:
+        """
+        return lambda obj: type(obj) == expected_type, result_type
+
+    @classmethod
+    def if_property(cls, prop_key, expected_value, result_type):
+        """
+
+        :param str or int prop_key:
+        :param Any expected_value:
+        :param type or TypeProvide result_type:
+        """
+        from property_selector import to_selector
+
+        getter = to_selector(prop_key)
+        return lambda obj: getter.get_from(obj) == expected_value, result_type
 
     def __init__(self, type_selector):
         self._type_selector = type_selector
