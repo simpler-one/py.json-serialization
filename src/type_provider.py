@@ -36,6 +36,10 @@ class ConditionalType(TypeProvider):
         return ConditionalType(find_type)
 
     @classmethod
+    def always(cls, result_type):
+        return lambda _: True, result_type
+
+    @classmethod
     def if_type(cls, expected_type, result_type):
         """
 
@@ -61,7 +65,7 @@ class ConditionalType(TypeProvider):
         self._type_selector = type_selector
 
     def get_type(self, current_type, json_obj):
-        type_like = self._type_selector(current_type, json_obj)
+        type_like = self._type_selector(json_obj)
         return type_like if isinstance(type_like, type) else type_like.get_type(current_type, json_obj)
 
 
