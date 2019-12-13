@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Type
 import json
 from .info import HELPER
 from .type_provider import ListType, MapType
@@ -9,13 +9,21 @@ NoneType = type(None)
 CONTAINER_TYPES = {list, dict}
 
 
-def parse(text, cls, option=None):
+def parse(text, cls: Type[T], option=None):
+    """
+    
+    :rtype: T
+    """
     if not _validate_root_class(cls):
         raise ValueError()
     return _from_json_obj(json.loads(text), cls, option, cls.__name__)
 
 
-def from_json_obj(json_obj, cls, option=None):
+def from_json_obj(json_obj, cls: Type[T], option=None):
+    """
+    
+    :rtype: T
+    """
     if not _validate_root_class(cls):
         raise ValueError()
     return _from_json_obj(json_obj, cls, option, cls.__name__)
